@@ -8,18 +8,17 @@ import {
   Switch,
   Route
 } from 'react-router-dom';
-// import { Grid } from 'react-bootstrap';
 
 // import React from 'react';
 import './App.css';
-//** Importing the necessary components from .jsx folder*/
+//** Importing the necessary components from .js folder*/
 // import SearchForm from './Components/SearchForm'
 // import Navigate from './Components/Navigate';
 import Gallery from './Components/Gallery';
 import apiKey from './Components/config';
 import NotFound from './Components/NotFound';
 import Picture from './Components/Picture';
-import Header from 'Header';
+import Header from './Components/Header';
 import Results from './Components/Results'
 
 
@@ -63,41 +62,41 @@ export default class App extends Component {
         });
     }
   
-    searchPandas = (query = 'pandas') => { //image array for 'panda'
-      axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key${apiKey}=&tags${query}=ocean&per_page=24&format=json&nojsoncallback=1`)
-        .then(res => {
-          this.setState({
-            pandas: res.data.pictures.picture
-          })
-        })
-        .catch(error => {
+    // searchPandas = (query = 'pandas') => { //image array for 'panda'
+    //   axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key${apiKey}=&tags${query}=ocean&per_page=24&format=json&nojsoncallback=1`)
+    //     .then(res => {
+    //       this.setState({
+    //         pandas: res.data.pictures.picture
+    //       })
+    //     })
+    //     .catch(error => {
   
-        });
-    }
+    //     });
+    // }
   
-    searchStars = (query = 'stars') => { //image array for 'stars'
-      axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key${apiKey}=&tags${query}=ocean&per_page=24&format=json&nojsoncallback=1`)
-        .then(res => {
-          this.setState({
-            stars: res.data.pictures.picture
-          })
-        })
-        .catch(error => {
+    // searchStars = (query = 'stars') => { //image array for 'stars'
+    //   axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key${apiKey}=&tags${query}=ocean&per_page=24&format=json&nojsoncallback=1`)
+    //     .then(res => {
+    //       this.setState({
+    //         stars: res.data.pictures.picture
+    //       })
+    //     })
+    //     .catch(error => {
   
-        });
-    }
+    //     });
+    // }
   
-    searchCat = (query = 'cat') => { //image array for 'cat'
-      axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key${apiKey}=&tags${query}=ocean&per_page=24&format=json&nojsoncallback=1`)
-        .then(res => {
-          this.setState({
-            cat: res.data.pictures.picture
-          })
-        })
-        .catch(error => {
+    // searchCat = (query = 'cat') => { //image array for 'cat'
+    //   axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key${apiKey}=&tags${query}=ocean&per_page=24&format=json&nojsoncallback=1`)
+    //     .then(res => {
+    //       this.setState({
+    //         cat: res.data.pictures.picture
+    //       })
+    //     })
+    //     .catch(error => {
           
-        });
-    }
+    //     });
+    // }
 
 
     render() {
@@ -107,9 +106,9 @@ export default class App extends Component {
           <Route render={({ history }) => <Header onSearch={this.onSearch} history={history} />} />
           <Switch>
             <Route exact path="/" render={() => <Redirect to="/pandas" />} />
-            <Route path="/pandas" render={() => <Picture data={this.state.pandas} results="Pandas" />} />
-            <Route path="/stars" render={() => <Picture data={this.state.stars} results="Stars" />} />
-            <Route path="/cats" render={() => <Picture data={this.state.cats} results="Cats" />} />
+            <Route path="/pandas" render={() => <Picture data={this.state.pandas} title={"Pandas"} />} />
+            <Route path="/stars" render={() => <Picture data={this.state.stars} title={"Stars"} />} />
+            <Route path="/cats" render={() => <Picture data={this.state.cats} title={"Cats"} />} />
             <Route
               path="/search/:query"
               render={({ match }) =>
