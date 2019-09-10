@@ -1,127 +1,124 @@
-// Quadria's Gallery
-//**I am shooting for meets expectations, if I do not meet expectations, it needs to be sent back */
-
+// // Quadria's Gallery
+// //**I am shooting for meets expectations, if I do not meet expectations, it needs to be sent back */
+//Importing from React and other components
 import React, { Component } from 'react';
-import axios from 'axios';
-import {
-  Redirect,
-  Switch,
-  Route
-} from 'react-router-dom';
-
-// import React from 'react';
 import './App.css';
-//** Importing the necessary components from .js folder*/
-// import SearchForm from './Components/SearchForm'
-// import Navigate from './Components/Navigate';
-import Gallery from './Components/Gallery';
-import apiKey from './Components/config';
-import NotFound from './Components/NotFound';
-import Picture from './Components/Picture';
-import Header from './Components/Header';
-import Results from './Components/Results'
+import apiKey from './config.js';
+// import axios from 'axios';
+import NotFound from './Components/NotFound.js';
+import Header from './Components/Header.js';
+import Gallery from './Components/Gallery.js';
+// import Photo from './Components/Picture';
 
+import { Route, Switch, Redirect, BrowserRouter } from 'react-router-dom';
 
-export default class App extends Component {
-
-  constructor() {
-    super();
-    this.state = {
-      images: [],
-      searchKey: "",
-      searchPerformed: false,
-      loading: true
+//Setting states to an empty array
+class App extends Component {
+   state = {
+      searchForm: "",
+      results: [],
+      pandas:[],
+      cats:[],
+      stars:[],
     };
-  }
+  
+  //Buttons displaying 3 different options 
+  pickedImages = ['pandas', 'cats', 'stars'];
 
-  componentDidMount() {
-   console.log(apiKey);
-   for (let i = 0; i < this.pickedPhotos.length; i++) 
-   axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${this.pickedPhotos[i]}&per_page=24&format=json&nojsoncallback=1`)
-    .then(response => {
-      console.log(response);
-      this.setState({
-        [this.pickedPhotos[i]]: response.data.pictures.picture
-      });
-      })
-      .catch(error => {
-        console.log('Error fetching and parsing data', error);
-      });
-  }
-    //Fetching API 
-    performSearch = (query) => { //array for search and index pages with default query for those pages
-      axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key${apiKey}=&tags${query}=ocean&per_page=24&format=json&nojsoncallback=1`)
-        .then(res => {
-          this.setState({
-            searchPerformed: res.data.pictures.picture
-  
-          })
-        })
-        .catch(error => {
-  
+
+componentDidMount() {
+  this.performSearch('pandas')
+  this.performSearch('stars')
+  this.performSearch('cats')
+}
+
+    // const url = this.props.location.pathname;
+    // if (url.includes('/searchForm')) {
+    //   let query = url.slice(8);
+    //   this.onSearch(query);
+    // }
+
+  performSearch = (query = 'pandas') => {
+
+    this.setState({
+      loading: true
+
+    });
+    fetch(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=${query}&per_page=24&format=json&nojsoncallback=1`)
+
+    .then(response => response.json())
+    .then(responseData => {
+      //  updates the photos on the query selected
+      if (query === "pandas") {
+        this.setState({
+          pandasResults: responseData.photos.photo,
+          loading: false
         });
-    }
-  
-    // searchPandas = (query = 'pandas') => { //image array for 'panda'
-    //   axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key${apiKey}=&tags${query}=ocean&per_page=24&format=json&nojsoncallback=1`)
-    //     .then(res => {
-    //       this.setState({
-    //         pandas: res.data.pictures.picture
-    //       })
-    //     })
-    //     .catch(error => {
-  
-    //     });
-    // }
-  
-    // searchStars = (query = 'stars') => { //image array for 'stars'
-    //   axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key${apiKey}=&tags${query}=ocean&per_page=24&format=json&nojsoncallback=1`)
-    //     .then(res => {
-    //       this.setState({
-    //         stars: res.data.pictures.picture
-    //       })
-    //     })
-    //     .catch(error => {
-  
-    //     });
-    // }
-  
-    // searchCat = (query = 'cat') => { //image array for 'cat'
-    //   axios.get(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key${apiKey}=&tags${query}=ocean&per_page=24&format=json&nojsoncallback=1`)
-    //     .then(res => {
-    //       this.setState({
-    //         cat: res.data.pictures.picture
-    //       })
-    //     })
-    //     .catch(error => {
-          
-    //     });
-    // }
+      } else if (query === "stars") {
+        this.setState({
+          starsResults: responseData.photos.photo,
+          loading: false
+        });
+      } else if (query === "cats") {
+        this.setState({
+          catsResults: responseData.photos.photo,
+          loading: false
+        });
+      } else {
+        this.setState({
+          results: responseData.photos.photo,
+          searchForm: query,
+          loading: false
+        });
+      }
+    })
+    .catch(error => console.log("Error fetching or parsing data", error));
 
 
-    render() {
-      return (
-        <div className="container">
-  
-          <Route render={({ history }) => <Header onSearch={this.onSearch} history={history} />} />
-          <Switch>
-            <Route exact path="/" render={() => <Redirect to="/pandas" />} />
-            <Route path="/pandas" render={() => <Picture data={this.state.pandas} title={"Pandas"} />} />
-            <Route path="/stars" render={() => <Picture data={this.state.stars} title={"Stars"} />} />
-            <Route path="/cats" render={() => <Picture data={this.state.cats} title={"Cats"} />} />
-            <Route
-              path="/search/:query"
-              render={({ match }) =>
-                this.state.loading ? (
-  
-                  <h2>It's Loading...</h2>
-                ) : (
-                    <Picture data={this.state.search} results={match.params.query} match={match} />
-                  )}
-            />
-            <Route component={NotFound} />
-          </Switch>
-        </div>
-      );
-                }
-              }
+  };
+
+  render() {
+    return (
+      <BrowserRouter>
+      <div className="container">
+<Header newSearch={this.performSearch} />
+        {/* <Route render={({ history }) => <Header onSearch={this.onSearch} history={history} />} /> */}
+        <Switch>
+          <Route exact path="/" render={() => 
+          <Redirect to='/pandas' />
+        } />
+
+<Route exact path="/pandas" render={() =>
+  (this.state.loading)
+  ? <p>Loading...</p>
+  : <Gallery pictures={this.state.pandasResults} query='pandas' />
+} />
+
+<Route exact path="/stars" render={() =>
+  (this.state.loading)
+  ? <p>Loading...</p>
+  : <Gallery pictures={this.state.starsResults} query='stars' />
+} />
+
+<Route exact path="/cats" render={() =>
+  (this.state.loading)
+  ? <p>Loading...</p>
+  : <Gallery pictures={this.state.catsResults} query='cats' />
+} />
+
+<Route path="/search/:topic" render={() =>
+(this.state.loading)
+? <p>Loading...</p>
+: <Gallery pictures={this.state.results} query={this.state.searchForm} />
+} /> 
+
+<Route component= {NotFound}/>
+</Switch>
+</div>
+</BrowserRouter>
+  );
+};
+}
+
+
+export default App;
