@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Search extends Component { 
+class SearchForm extends Component { 
   
     state = {
       searchText: '' //empty string
@@ -12,17 +12,18 @@ class Search extends Component {
     
     handleSubmit = event => { //event listener for submit key press to handle search change
       event.preventDefault();
-      this.props.onSearch(this.state.searchText);
+      this.props.onSearch(this.query.value);
       event.currentTarget.reset();
     }
     
     render() {  
       return ( //layout of submit form
         <form className="search-form" onSubmit={this.handleSubmit} >
-          <label className="is-hidden" htmlFor="search"></label>
+          <label className="is-hidden" htmlFor="search">Search</label>
           <input type="search" 
                  onChange={this.onSearchChange}
                  name="search" 
+                 ref={(input) => this.query = input}
                  placeholder="Search" />
           <button type="submit" id="submit" className="search-button"><i className="material-icons icn-search">search</i></button>
         </form>      

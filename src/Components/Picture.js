@@ -1,26 +1,30 @@
-import React from 'react';
-import Gallery from './Gallery';
+import React from 'react'
 
-// Function gives the pictures
-const Picture = ({ data, title }) => {
-    // let picture = props
-    let pictures = [];
-    if (data) { 
-        pictures = data.map((picture) => (
-            < Gallery
-                url={`https://oceans${picture.oceans}.staticflickr.com/${picture.server}/${picture.id}_${picture.secret}.jpg`}
-                key={picture.id}
-
-            />
-        ));
-    }
+const Picture = (props) => {
     return (
-        < div className="photo-container" >
-
-            <h2>{title} </h2>
-            <ul>{pictures}</ul>
-        </div>
+        <li>
+            <img src={props.url} alt="" />
+        </li>
     );
-};
+}
+// console.log(props);
 
 export default Picture;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
