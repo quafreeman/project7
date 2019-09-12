@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 
-class SearchForm extends Component { 
+class Search extends Component { 
   
     state = {
       searchText: '' //empty string
@@ -12,12 +13,15 @@ class SearchForm extends Component {
     
     handleSubmit = event => { //event listener for submit key press to handle search change
       event.preventDefault();
-      this.props.onSearch(this.query.value);
+      let searchQuery = this.state.searchText; //added
+      this.props.onSearch(searchQuery);
       event.currentTarget.reset();
+      let path = `/search/${searchQuery}`; //added
+      this.props.history.push(path); //added
     }
     
     render() {  
-      return ( //layout of submit form
+      return ( //layout of Search Form
         <form className="search-form" onSubmit={this.handleSubmit} >
           <label className="is-hidden" htmlFor="search">Search</label>
           <input type="search" 
@@ -30,4 +34,4 @@ class SearchForm extends Component {
       );
     }
   }
-export default (SearchForm);
+export default withRouter(Search);

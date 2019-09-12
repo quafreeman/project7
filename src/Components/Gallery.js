@@ -3,7 +3,6 @@ import Picture from './Picture';
 
 // Function gives the pictures
 const Gallery = (props) => {
-    // let picture = props
     const results= props.pictures;
     let pictures;
     if (results && results.length > 0) { 

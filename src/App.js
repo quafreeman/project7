@@ -4,16 +4,14 @@
 import React, { Component } from "react";
 import "./App.css";
 import apiKey from "./config.js";
-// import axios from 'axios';
 import NotFound from "./Components/NotFound.js";
 import Header from "./Components/Header.js";
 import Gallery from "./Components/Gallery.js";
-// import Photo from './Components/Picture';
-// import SearchForm from "./Components/SearchForm";
-
+import Navigate from "./Components/Navigate";
 
 
 import { Route, Switch, Redirect, BrowserRouter } from "react-router-dom";
+import SearchForm from "./Components/SearchForm";
 
 //Setting states to an empty array
 class App extends Component {
@@ -82,7 +80,8 @@ class App extends Component {
       <BrowserRouter>
         <div className="container">
           <Header newSearch={this.performSearch} />
-          {/* <Route render={({ history }) => <Header onSearch={this.onSearch} history={history} />} /> */}
+          <SearchForm onSearch={this.performSearch} />
+          <Navigate />
           <Switch>
             <Route exact path="/" render={() => <Redirect to="/pandas" />} />
 
@@ -122,17 +121,12 @@ class App extends Component {
               }
             />
 
-            <Route
-              path="/search/:topic"
-              render={() =>
-                this.state.loading ? (
-                  <p>Loading...</p>
-                ) : (
-                  <Gallery
-                    pictures={this.state.results}
-                    query={this.state.searchForm}
+            <Route path="/search/:topic" render={() =>
+                (this.state.loading)
+                 ? <p>Loading...</p>
+                 : <Gallery pictures={this.state.results} query={this.state.searchForm}
                   />
-                )
+                //}
               }
             />
 
